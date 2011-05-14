@@ -32,7 +32,13 @@ class ContactForm(BaseContent):
     """
     text = models.TextField(blank=True)
     thank_you_message = models.TextField(blank=True)
-    
+
+    def get_searchable_text(self):
+        """Returns the searchable text of the contact form.
+        """
+        searchable_text = self.title + " " + self.description + " " + self.text
+        return lfc.utils.html2text(searchable_text)
+
     def edit_form(self, **kwargs):
         """Returns the add/edit form of the Blog
         """
@@ -41,8 +47,8 @@ class ContactForm(BaseContent):
     def render(self, request):
         """Renders the content of the contact form.
         """
-        render_context = self.get_render_context(request)
-        
+        request_context = self.get_request_context(request)
+
         portal = lfc.utils.get_portal()
         if request.method == "POST":
             form = DjangoContactForm(data=request.POST)
@@ -52,9 +58,9 @@ class ContactForm(BaseContent):
                     "form": form,
                 }))
                 send_mail(
-                    subject=_("New mail from %s" % portal.title), 
-                    message=message, 
-                    from_email=portal.from_email, 
+                    subject=_("New mail from %s" % portal.title),
+                    message=message,
+                    from_email=portal.from_email,
                     recipient_list=portal.get_notification_emails()
                 )
             else:
@@ -63,10 +69,10 @@ class ContactForm(BaseContent):
             form = DjangoContactForm()
             sent = False
 
-        render_context["sent"] = sent
-        render_context["form"] = form
+        request_context["sent"] = sent
+        request_context["form"] = form
 
-        return self.render_to_string(render_context)
+        return self.render_to_string(request_context)
 
 class ContactFormForm(forms.ModelForm):
     """The add/edit form of the ContactForm content object.
