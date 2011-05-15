@@ -46,9 +46,9 @@ class ContactForm(BaseContent):
 
     def render(self, request):
         """Renders the content of the contact form.
-        """
-        request_context = self.get_request_context(request)
 
+        This adds the form and sent to the RequestContext.
+        """
         portal = lfc.utils.get_portal()
         if request.method == "POST":
             form = DjangoContactForm(data=request.POST)
@@ -69,10 +69,10 @@ class ContactForm(BaseContent):
             form = DjangoContactForm()
             sent = False
 
-        request_context["sent"] = sent
-        request_context["form"] = form
+        self.context["sent"] = sent
+        self.context["form"] = form
 
-        return self.render_to_string(request_context)
+        return super(ContactForm, self).render(request)
 
 class ContactFormForm(forms.ModelForm):
     """The add/edit form of the ContactForm content object.
