@@ -3,24 +3,14 @@ from django import forms
 from django.db import models
 
 # django imports
-from django import forms
-from django import template
-from django.conf import settings
-from django.contrib.auth.models import User
-from django.contrib.contenttypes import generic
-from django.contrib.contenttypes.models import ContentType
-from django.core.cache import cache
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse
-from django.db import models
-from django.db.models.signals import post_syncdb
 from django.template import RequestContext
 from django.template.loader import render_to_string
-from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 
 # lfc imports
 import lfc.utils
+from lfc.fields.rich_text import RichTextField
 from lfc.models import BaseContent
 
 # lfc_contact_form imports
@@ -30,13 +20,13 @@ from lfc_contact_form.forms import ContactForm as DjangoContactForm
 class ContactForm(BaseContent):
     """Contact form for LFC.
     """
-    text = models.TextField(blank=True)
+    text = RichTextField(_(u"Text"), blank=True)
     thank_you_message = models.TextField(blank=True)
 
     def get_searchable_text(self):
         """Returns the searchable text of the contact form.
         """
-        searchable_text = self.title + " " + self.description + " " + self.text
+        searchable_text = self.title + " " + self.description + " " + self.text.text
         return lfc.utils.html2text(searchable_text)
 
     def edit_form(self, **kwargs):
@@ -74,9 +64,19 @@ class ContactForm(BaseContent):
 
         return super(ContactForm, self).render(request)
 
+    def has_seo_tab(self):
+        return super(ContactForm, self).has_seo_tab(False)
+
+    def has_comments_tab(self):
+        return super(ContactForm, self).has_comments_tab(False)
+
+    def has_children_tab(self):
+        return super(ContactForm, self).has_children_tab(False)
+
+
 class ContactFormForm(forms.ModelForm):
     """The add/edit form of the ContactForm content object.
     """
     class Meta:
         model = ContactForm
-        fields = ("title", "display_title", "slug", "description", "text", "thank_you_message")
+        fields = ("title", "display_title", "slug", "description", "text_type", "text", "thank_you_message")
