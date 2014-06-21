@@ -10,7 +10,7 @@ from lfc.utils.registration import unregister_template
 # lfc_contact_form import
 from lfc_contact_form.models import ContactForm
 
-name = "Contact Form"
+name = _(u"Contact form")
 description = _(u"Contact form for LFC")
 
 
