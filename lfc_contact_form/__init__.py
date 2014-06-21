@@ -31,4 +31,4 @@ def uninstall():
     unregister_content_type("ContactForm")
 
     # Unregister template
-    unregister_template("Contact Form")
+    unregister_template("Contact form")
