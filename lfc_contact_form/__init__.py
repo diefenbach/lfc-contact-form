@@ -18,7 +18,7 @@ def install():
     """Installs the lfc_contact_form application.
     """
     # Register Templates
-    register_template(name="Contact Form", path="lfc_contact_form/contact_form.html")
+    register_template(name="Contact form", path="lfc_contact_form/contact_form.html")
 
     # Register objects
     register_content_type(ContactForm, name="Contact", templates=["Contact Form"], default_template="Contact Form", global_addable=True, workflow="Portal")
