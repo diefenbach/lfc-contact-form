@@ -12,6 +12,7 @@ from lfc_contact_form.models import ContactForm
 
 name = _(u"Contact form")
 description = _(u"Contact form for LFC")
+version = u"1.0.1"
 
 
 def install():
